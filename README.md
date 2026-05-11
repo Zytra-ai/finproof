@@ -142,7 +142,7 @@ Evaluation is free for all submissions.
 @article{addagada2026finproof,
   title   = {FINPROOF: The First Adversarial Benchmark for AI Guardrail
              Systems in Banking, Financial Services, and Insurance},
-  author  = {Addagada, Tejasvi},
+  author  = {Zytra Techsolutions},
   journal = {SSRN Working Paper},
   number  = {6728799},
   year    = {2026},
