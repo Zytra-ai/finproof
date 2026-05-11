@@ -5,7 +5,7 @@
 **5,389 prompts · 22 BFSI domains · 0% training contamination · Full regulatory mapping**
 
 Published by [Zytra Tech Solutions](https://zytratechnologies.com) · BKC, Mumbai, India  
-Benchmark portal: [finproof.zytra.ai](https://finproof.zytra.ai)  
+Benchmark portal: [finproof.ai](https://finproof.zytra.ai)  
 Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)  
 Paper: [SSRN Working Paper 6728799](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799)  
 Contact: finproof@zytratechnologies.com  
