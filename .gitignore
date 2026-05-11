@@ -46,3 +46,6 @@ run_krait_qi.py
 score_assay_semalith.py
 qcbm_*.py
 utils.py
+finproof/_FINPROOF_ENRICHMENT_PLAN.md
+finproof/eval_results_llamaguard1b.json
+finproof/enrich/
