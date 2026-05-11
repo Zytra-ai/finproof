@@ -33,3 +33,14 @@ logs/
 .DS_Store
 **/.DS_Store
 *.pkl
+ASSAY_BENCHMARK.xlsx
+_ASSAY_*.json
+_ASSAY_*.md
+_CONSENSUS_*.md
+__init__.py
+analyze_assay_dataset.py
+build_assay_v1_pipeline.py
+consensus_score.py
+generate_assay_*.py
+run_krait_qi.py
+score_assay_semalith.py
