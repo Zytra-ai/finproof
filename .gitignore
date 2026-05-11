@@ -44,3 +44,5 @@ consensus_score.py
 generate_assay_*.py
 run_krait_qi.py
 score_assay_semalith.py
+qcbm_*.py
+utils.py
