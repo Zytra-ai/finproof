@@ -1,0 +1,65 @@
+{
+  "name": "FinProof v1",
+  "description": "FinProof is the complete BFSI adversarial safety benchmark — ASSAY v1 (classical generation, 4,200 prompts) merged with ASSAY-QI v2.0 (quantum-augmented generation, 1,273 prompts). 5,473 adversarial prompts across 7 BFSI attack categories, 3 difficulty levels, and 3 registers (professional, customer_mobile, rm_internal). First benchmark to combine quantum circuit Born machine sampling, simulated annealing QUBO perturbation, and retail register adversarial generation for BFSI AI safety evaluation.",
+  "version": "v1.0",
+  "corpus_sha256": "3a330eabfafa984ae0d65a6cb89d9953578f7fe9f9046723f2f9a54711136f6e",
+  "total_prompts": 5389,
+  "sources": {
+    "assay_v1": {
+      "n": 4200,
+      "description": "Classical Claude/GPT generation, 7 cats × 3 diffs × 200"
+    },
+    "assay_qi_v2": {
+      "n": 1189,
+      "description": "Quantum-augmented: QCBM 8q/10q + SA annealing + retail register"
+    }
+  },
+  "registers": {
+    "professional": 5068,
+    "customer_mobile": 206,
+    "rm_internal": 115
+  },
+  "categories": {
+    "B-01": 746,
+    "B-02": 763,
+    "B-03": 749,
+    "B-04": 761,
+    "B-05": 807,
+    "B-06": 776,
+    "B-07": 787
+  },
+  "difficulty": {
+    "advanced": 1526,
+    "adversarial_edge": 617,
+    "direct": 1606,
+    "indirect": 1515,
+    "intermediate": 125
+  },
+  "semalith_scored_n": 1189,
+  "assay_qi_semalith_miss_pct": 14.3,
+  "quantum_techniques": [
+    "QCBM 8-qubit boundary sampling (PennyLane, MMD loss)",
+    "QCBM 8-qubit difficulty gradient interpolation",
+    "QCBM 8-qubit cross-pattern joint distribution",
+    "QCBM 10-qubit Fix1 boundary-filtered paraphrases",
+    "Simulated Annealing QUBO minimum-perturbation adversarial"
+  ],
+  "files": {
+    "corpus": "finproof_v1.jsonl",
+    "manifest": "_FINPROOF_V1_MANIFEST.json"
+  },
+  "component_corpora": {
+    "assay_v1": {
+      "total": 4200,
+      "description": "ASSAY v1 — Claude/GPT-4o generated, 7 categories × 3 difficulties × 200 prompts"
+    },
+    "assay_qi_v2": {
+      "total_standalone": 1273,
+      "non_overlapping_in_finproof": 1189,
+      "overlap_excluded": 84,
+      "overlap_note": "84 prompts (qcbm_source=pg_miss_v1_professional) already present in ASSAY v1 → excluded to avoid double-counting in FinProof",
+      "description": "ASSAY-QI v2.0 — quantum-augmented + retail register. See assay_qi_final_v2.jsonl for standalone 1,273-prompt corpus."
+    }
+  },
+  "note_on_counts": "FinProof v1 = ASSAY v1 (4,200) + ASSAY-QI v2.0 non-overlapping (1,189) = 5,389. ASSAY-QI v2.0 as a standalone benchmark contains 1,273 prompts (84 overlap with ASSAY v1)."
+}

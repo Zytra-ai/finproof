@@ -1,0 +1,142 @@
+{
+  "total": 1811,
+  "cells": {
+    "B-01-direct": {
+      "accepted": 99,
+      "dropped": {
+        "no_financial_entity": 118
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_01_direct.jsonl"
+    },
+    "B-01-indirect": {
+      "accepted": 76,
+      "dropped": {
+        "no_financial_entity": 33
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_01_indirect.jsonl"
+    },
+    "B-01-advanced": {
+      "accepted": 93,
+      "dropped": {
+        "no_financial_entity": 3
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_01_advanced.jsonl"
+    },
+    "B-02-direct": {
+      "accepted": 147,
+      "dropped": {
+        "no_financial_entity": 41
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_02_direct.jsonl"
+    },
+    "B-02-indirect": {
+      "accepted": 79,
+      "dropped": {
+        "no_financial_entity": 24
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_02_indirect.jsonl"
+    },
+    "B-02-advanced": {
+      "accepted": 81,
+      "dropped": {
+        "no_financial_entity": 3
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_02_advanced.jsonl"
+    },
+    "B-03-direct": {
+      "accepted": 101,
+      "dropped": {
+        "no_financial_entity": 1
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_03_direct.jsonl"
+    },
+    "B-03-indirect": {
+      "accepted": 89,
+      "dropped": {
+        "no_financial_entity": 1
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_03_indirect.jsonl"
+    },
+    "B-03-advanced": {
+      "accepted": 87,
+      "dropped": {},
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_03_advanced.jsonl"
+    },
+    "B-04-direct": {
+      "accepted": 101,
+      "dropped": {},
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_04_direct.jsonl"
+    },
+    "B-04-indirect": {
+      "accepted": 100,
+      "dropped": {},
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_04_indirect.jsonl"
+    },
+    "B-04-advanced": {
+      "accepted": 86,
+      "dropped": {},
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_04_advanced.jsonl"
+    },
+    "B-05-direct": {
+      "accepted": 64,
+      "dropped": {
+        "no_financial_entity": 39
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_05_direct.jsonl"
+    },
+    "B-05-indirect": {
+      "accepted": 84,
+      "dropped": {
+        "no_financial_entity": 3
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_05_indirect.jsonl"
+    },
+    "B-05-advanced": {
+      "accepted": 79,
+      "dropped": {},
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_05_advanced.jsonl"
+    },
+    "B-06-direct": {
+      "accepted": 97,
+      "dropped": {
+        "no_financial_entity": 8
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_06_direct.jsonl"
+    },
+    "B-06-indirect": {
+      "accepted": 84,
+      "dropped": {
+        "no_financial_entity": 5
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_06_indirect.jsonl"
+    },
+    "B-06-advanced": {
+      "accepted": 67,
+      "dropped": {
+        "no_financial_entity": 1
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_06_advanced.jsonl"
+    },
+    "B-07-direct": {
+      "accepted": 80,
+      "dropped": {
+        "no_financial_entity": 24
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_07_direct.jsonl"
+    },
+    "B-07-indirect": {
+      "accepted": 59,
+      "dropped": {
+        "no_financial_entity": 22
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_07_indirect.jsonl"
+    },
+    "B-07-advanced": {
+      "accepted": 58,
+      "dropped": {
+        "no_financial_entity": 3
+      },
+      "path": "/Users/tejasvia/GenAIGovernance/assay/raw/B_07_advanced.jsonl"
+    }
+  }
+}

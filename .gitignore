@@ -1,0 +1,35 @@
+# Withheld data — never publish
+finproof/tiers/finproof_v1_tier3_research.jsonl
+finproof/tiers/finproof_v1_tier4_withheld.jsonl
+finproof/finproof_v1.jsonl
+finproof/finproof_v1_complete.jsonl
+
+# Internal development
+assay_qi/
+krait_qi/
+raw/
+generate_pass*.py
+prompts_b0*.py
+prompts_pass*.py
+prompts_pass2*.py
+prompts_pass3*.py
+prompts_pass4*.py
+prompts_pass5*.py
+prompts_pass6*.py
+prompts_pass7*.py
+prompts_pass8*.py
+prompts_pass9*.py
+
+# Internal scripts and binaries
+_sha_contamination_index.pkl
+qcbm_dark_spots/
+b04/
+filtered/
+final/
+hindi/
+logs/
+
+# Mac
+.DS_Store
+**/.DS_Store
+*.pkl

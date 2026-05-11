@@ -1,0 +1,148 @@
+{
+  "benchmark": "FinProof v1",
+  "version": "1.0.0",
+  "created": "2026-05-09T04:54:53Z",
+  "total_prompts": 5389,
+  "component_corpora": {
+    "assay_v1": {
+      "total": 4200,
+      "description": "ASSAY v1 — Claude/GPT-4o generated, 7 categories × 3 difficulties × 200 prompts"
+    },
+    "assay_qi_v2": {
+      "total_standalone": 1273,
+      "non_overlapping_in_finproof": 1189,
+      "overlap_with_assay_v1": 84,
+      "description": "ASSAY-QI v2.0 — quantum-augmented + retail register. 84 prompts overlap with ASSAY v1 PG-miss set (correct dedup)."
+    }
+  },
+  "data_governance": {
+    "framework": "PINT-inspired four-tier release",
+    "tiers": {
+      "tier_1_fully_public": {
+        "label": "Taxonomy, methodology, harness code, benign examples",
+        "content": "arXiv paper + eval harness (Apache 2.0) + benign D0 examples",
+        "access": "No restriction",
+        "note": "FINPROOF v1 is all-attack. Benign tier will be added in v1.1 (1,000 D0 examples)."
+      },
+      "tier_2_email_gate": {
+        "label": "Easy attack examples",
+        "count": 1606,
+        "pct": 29.8,
+        "difficulty": [
+          "direct"
+        ],
+        "access": "Email registration at finproof.zytra.ai/access",
+        "sha256": "0e774f1b347931c8413c0fa5745c5cf561591acc8c0a9dddd6521fd90fa857ab",
+        "category_distribution": {
+          "B-01": 233,
+          "B-02": 222,
+          "B-03": 224,
+          "B-04": 230,
+          "B-05": 239,
+          "B-06": 224,
+          "B-07": 234
+        },
+        "register_distribution": {
+          "customer_mobile": 206,
+          "professional": 1400
+        },
+        "source_distribution": {
+          "assay_qi_v2": 206,
+          "assay_v1": 1400
+        },
+        "rationale": "Direct-difficulty examples are well-represented in public benchmarks (HarmBench, PINT). Email gate builds contact database, not restricts access."
+      },
+      "tier_3_research": {
+        "label": "Medium attack examples",
+        "count": 2036,
+        "pct": 37.8,
+        "difficulty": [
+          "indirect",
+          "intermediate",
+          "adversarial_edge (QCBM 8q)"
+        ],
+        "access": "FINPROOF Research Agreement (non-commercial, no training use, citation required)",
+        "sha256": "15d5a76befdeda58b278d4b83151b300d8d70862fcdea911aac726035845a760",
+        "category_distribution": {
+          "B-01": 273,
+          "B-02": 301,
+          "B-03": 270,
+          "B-04": 271,
+          "B-05": 304,
+          "B-06": 304,
+          "B-07": 313
+        },
+        "register_distribution": {
+          "professional": 1921,
+          "rm_internal": 115
+        },
+        "source_distribution": {
+          "assay_qi_v2": 636,
+          "assay_v1": 1400
+        },
+        "technique_distribution": {
+          "assay_v1_indirect": 1400,
+          "pennylane_v1_boundary": 173,
+          "pennylane_v1_gradient": 125,
+          "pennylane_v1_joint": 100,
+          "qcbm_10qubit_paraphrase": 123,
+          "retail_boundary_B-07_rm_verification": 10,
+          "retail_pg_evading_rm_internal": 57,
+          "retail_rm_internal": 48
+        },
+        "rationale": "QCBM-generated examples (Fix1 10q, boundary 8q, gradient 8q, joint 8q) are most novel distributional contribution. Research-only to prevent training data extraction."
+      },
+      "tier_4_withheld": {
+        "label": "Hard attack examples — official test set",
+        "count": 1747,
+        "pct": 32.4,
+        "difficulty": [
+          "advanced",
+          "adversarial_edge (SA Annealing)"
+        ],
+        "access": "Zytra-only. Official scores at finproof.zytra.ai exclusively.",
+        "sha256_of_withheld_set": "bf35df2e5a3f08c9202555db1a5bd82526fe844566dac2ebc945352168525e51",
+        "sha256_note": "Published hash allows future auditors to verify the same test set has been used across all evaluations. Inputs never released.",
+        "category_distribution": {
+          "B-01": 240,
+          "B-02": 240,
+          "B-03": 255,
+          "B-04": 260,
+          "B-05": 264,
+          "B-06": 248,
+          "B-07": 240
+        },
+        "source_distribution": {
+          "assay_qi_v2": 347,
+          "assay_v1": 1400
+        },
+        "technique_distribution": {
+          "assay_v1_advanced": 1400,
+          "neal_sa_v1": 344,
+          "pg_adversarial_b03_regfab": 3
+        },
+        "storage": "Encrypted offline. Access: max 2 people.",
+        "rationale": "Advanced ASSAY v1 prompts (multi-step authority chain) + SA Annealing boundary attacks (Semalith-targeted). Most detectable only by domain-trained models."
+      }
+    },
+    "pint_principle": "Public and withheld splits drawn from same apparent distribution. Developer examining Tier 2+3 examples cannot reverse-engineer Tier 4 content. QCBM distributional diversity ensures this property."
+  },
+  "semalith_miss_by_tier": {
+    "note": "Miss rate = p_benign >= 0.50 on ASSAY-QI v2.0 subset only",
+    "tier_2_email_gate": {
+      "scored": 206,
+      "missed": 35,
+      "miss_rate_pct": 17.0
+    },
+    "tier_3_research": {
+      "scored": 636,
+      "missed": 92,
+      "miss_rate_pct": 14.5
+    },
+    "tier_4_withheld": {
+      "scored": 347,
+      "missed": 43,
+      "miss_rate_pct": 12.4
+    }
+  }
+}
