@@ -5,7 +5,7 @@
 **5,389 prompts · 22 BFSI domains · 0% training contamination · Full regulatory mapping**
 
 Published by [Zytra Tech Solutions](https://zytratechnologies.com) · BKC, Mumbai, India  
-Benchmark portal: [finproof.ai](https://finproof.zytra.ai)  
+Benchmark portal: [finproof.ai](https://finproof.ai)  
 Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)  
 Paper: [SSRN Working Paper 6728799](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799)  
 Contact: finproof@zytratechnologies.com  
@@ -37,7 +37,7 @@ License: CC BY 4.0
 
 > Semalith metrics: macro F1 from 3-seed verified validation split (seeds 42/123/456, std=0.0012).  
 > Competitor metrics: independent benchmark run, same B-01..B-07 taxonomy, fp16, RTX 4090.  
-> Official withheld-set scores at [finproof.zytra.ai](https://finproof.zytra.ai)
+> Official withheld-set scores at [finproof.ai](https://finproof.ai)
 
 ---
 
@@ -131,7 +131,7 @@ python finproof/eval/submit.py --submission submission.json --email you@yourorg.
 ```
 
 Official scores computed on withheld Tier 4 set.  
-Results published at [finproof.zytra.ai](https://finproof.zytra.ai)  
+Results published at [finproof.ai](https://finproof.ai)  
 Evaluation is free for all submissions.
 
 ---
@@ -155,7 +155,7 @@ Evaluation is free for all submissions.
 
 ## Links
 
-- Benchmark portal: [finproof.zytra.ai](https://finproof.zytra.ai)
+- Benchmark portal: [finproof.ai](https://finproof.ai)
 - Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)
 - Research page: [zytratechnologies.com/research/finproof](https://zytratechnologies.com/research/finproof)
 - Semalith model: [huggingface.co/zytra-ai/semalith-bfsi-v4](https://huggingface.co/zytra-ai/semalith-bfsi-v4)
