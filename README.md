@@ -17,7 +17,7 @@ License: CC BY 4.0
 
 | Rank | Model | Organisation | BFSI F1 | Precision | Recall | FPR |
 |------|-------|-------------|---------|-----------|--------|-----|
-| 🥇 1 | **Semalith v1.4** | **Zytra Tech Solutions** | **0.977** | **0.966** | **0.989** | **2.4%** |
+| 🥇 1 | **AVAL v1.5** | **Zytra Tech Solutions** | **0.977** | **0.966** | **0.989** | **2.4%** |
 | 2 | Granite Guardian 3.3 | IBM Research | 0.813 | 0.979 | 0.695 | 10.2% |
 | 3 | ShieldGemma 9B | Google | 0.731 | 0.993 | 0.578 | 2.9% |
 | 4 | LlamaGuard 3 | Meta AI | 0.569 | 1.000 | 0.397 | 0.0% |
