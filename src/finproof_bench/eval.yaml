@@ -1,0 +1,18 @@
+title: FinProof Bench
+description: |
+  Adversarial safety benchmark for AI models in Banking, Financial Services
+  and Insurance (BFSI). Covers 36 attack subtypes across direct-injection
+  (B-series, 14 categories) and agentic orchestration attacks (D-series,
+  3 categories). Primary metrics: macro F1 and false-positive rate (FPR).
+group: Safeguards
+tags:
+  - safety
+  - finance
+  - classification
+  - agentic
+contributors:
+  - zytra-ai
+dataset:
+  samples: 2388
+  source: https://huggingface.co/datasets/Zytra/finproof-bench
+paper: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799
