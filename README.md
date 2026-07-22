@@ -7,7 +7,6 @@
 Published by [Zytra Tech Solutions](https://zytratechnologies.com) · BKC, Mumbai, India  
 Benchmark portal: [finproof.ai](https://finproof.ai)  
 Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)  
-Paper: [SSRN Working Paper 6728799](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799)  
 Contact: finproof@zytratechnologies.com  
 License: CC BY 4.0
 
