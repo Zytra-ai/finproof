@@ -205,22 +205,27 @@ FinProof occupies the empty quadrant: **BFSI-domain + adversarial-safety + India
 
 ## Submit Your Model
 
+### Tier 2 / Tier 3 — local scoring (you have the prompts)
+
 ```bash
-# Local T2/T3 scoring
 python finproof/eval/run_eval.py \
   --hf-dataset Zytra/finproof-bench \
   --finproof-version v1 \
   --submit-endpoint https://your-guardrail/predict \
   --model-name "MyGuard v1" --model-org "MyOrg"
-
-# T4 server-side evaluation (prompts never revealed)
-python finproof/eval/run_eval.py \
-  --submit-endpoint https://your-guardrail/predict \
-  --model-name "MyGuard v1" --model-org "MyOrg"
 ```
 
-Official scores computed on withheld Tier 4 set.  
-Results published at [finproof.ai](https://finproof.ai)  
+### Tier 4 — blind server-side evaluation (prompts never leave Zytra's server)
+
+T4 prompts are withheld permanently. Evaluation works as a blind pull:
+
+1. **You expose** your guardrail as an HTTP endpoint: `POST /predict` → `{"prediction": 0|1}`
+2. **Zytra's eval server** calls your endpoint once per T4 prompt
+3. **You never see** any T4 prompt — only your own prediction responses
+4. **Official scores** are returned and published at [finproof.ai](https://finproof.ai)
+
+To register your endpoint: email finproof@zytratechnologies.com with model name, organisation, and endpoint URL.
+
 Evaluation is free for all submissions.
 
 ---
