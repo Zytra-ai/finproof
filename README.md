@@ -39,16 +39,18 @@ FinProof is a **guardrail / safety** benchmark. It evaluates the control layer a
 
 > † AVAL v1.4 FPR from official eval server; see [finproof.ai](https://finproof.ai). Competitor FPR from independent benchmark run, same B-01–B-07 taxonomy, fp16, RTX 4090.
 
-**AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998).** Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point lower recall. On a BFSI benign stream the precision gap is the operationally costly axis (false positives block real customers); where maximal catch-rate matters more, AVAL's F1 and recall both lead.
+AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998). Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point lower recall.
+
+AVAL v1.5 results (F1 0.977) are available at [finproof.ai](https://finproof.ai). These figures reflect the v1.4 release (IT4 evaluation run) for reproducibility against the published Excel data.
 
 ### Track 2 — Agentic Safety (D-series, LLM-as-Agent)
 
-| Rank | Model | Organisation | Overall ASR ↓ | D-09 ASR | D-10 ASR | D-11 ASR |
-|------|-------|-------------|--------------|----------|----------|----------|
-| 🥇 1 | **AVAL v1.4** | **Zytra Tech Solutions** | **Eval in progress** | — | — | — |
-| — | gemini-3-flash | Google | 40.3% | 33.3% | 35.8% | 51.7% |
+| Model | Organisation | Overall ASR ↓ | D-09 ASR | D-10 ASR | D-11 ASR |
+|-------|-------------|--------------|----------|----------|----------|
+| gemini-3-flash | Google | 40.3% | 33.3% | 35.8% | 51.7% |
 
-> Lower ASR = better. ASR = Attack Success Rate on D-09/D-10/D-11 prompts sent directly to the model as agent.
+> Lower ASR = better. ASR = Attack Success Rate on D-09/D-10/D-11 prompts sent directly to the model as agent.  
+> AVAL Track 2 evaluation in progress — results pending.
 
 ### Per-domain F1 — B-01 to B-07
 
@@ -61,11 +63,11 @@ FinProof is a **guardrail / safety** benchmark. It evaluates the control layer a
 | B-05 | **0.986** ★ | 0.746 | 0.534 | 0.496 | 0.448 |
 | B-06 | **0.975** ★ | 0.792 | 0.572 | 0.429 | 0.421 |
 | B-07 | **0.962** ★ | 0.895 | 0.481 | 0.465 | 0.556 |
-| Weighted avg | **0.968** | — | — | — | — |
+| AVAL weighted (n=6,183) | **0.968** | — | — | — | — |
 
 > ‡ AVAL v1.4 per-category F1 from IT4 run (n=6,183 attack rows, all 4 tiers). Competitor aggregate F1 in Track 1 leaderboard above.  
-> Category codes map to taxonomy in the Domain Taxonomy section below. ★ = leading score for that domain.  
-> B-04: AVAL and ShieldGemma tied at 0.957 (no ★ awarded).
+> B-04: AVAL and ShieldGemma tied at 0.957 — no ★ awarded.  
+> Category codes map to taxonomy in the Domain Taxonomy section below.
 
 ---
 
@@ -93,19 +95,19 @@ python finproof/eval/run_eval.py \
   --model-name "MyGuard v1" --model-org "MyOrg"
 ```
 
-**Track 2 — Inspect AI (LLM agent evaluation):**
+**Track 2 — Inspect AI (LLM agent evaluation, requires cloning this repo):**
 
 ```bash
-pip install inspect-ai finproof-bench
+git clone https://github.com/Zytra-ai/finproof
+pip install inspect-ai
+cd finproof
 
-# B-series only (guardrail classification, public subset)
-inspect eval finproof_bench -T layer=input --model openai/gpt-4o
+# B-series only (guardrail classification, works with public HF subset)
+inspect eval src/finproof_bench -T layer=input --model openai/gpt-4o
 
 # D-series requires T3 access — D-categories not in public HF subset
-# inspect eval finproof_bench -T layer=processing ...
+# inspect eval src/finproof_bench -T layer=processing ...
 ```
-
-Inspect source: [`src/finproof_bench/`](src/finproof_bench/)
 
 No HuggingFace library required — all data available as plain JSONL for restricted BFSI environments.
 
@@ -144,6 +146,14 @@ Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
 
 ---
 
+## Structure — three layers, mirroring the guardrail stack
+
+- **Input Layer** — prompt injection, semantic injection, jailbreak attempts, PII submissions, sensitive-credential exposure, language-restriction violations. (B-series, public.)
+- **Processing Layer** — agentic workflows: tool-scope-restriction sequences, rollback of unauthorized actions, inter-agent handoff / context-fidelity validation. (D-series, gated T3+.)
+- **Output Layer** — hallucination probing against source documents, bias elicitation on protected demographic categories, source-citation verification. (Roadmap.)
+
+---
+
 ## Data Architecture
 
 | Tier | Prompts | Content | Access |
@@ -166,8 +176,7 @@ V1/V2 breakdown:
 | V2 D-series | 450 | D-09/D-10/D-11 agentic attacks |
 | **Total** | **11,474** | |
 
-Tier 3 access: finproof@zytratechnologies.com  
-Withheld set SHA-256: `bf35df2e5a3f08c9202555db1a5bd825...`
+Tier 3 access: finproof@zytratechnologies.com
 
 ---
 
@@ -181,6 +190,16 @@ FINPROOF uses a hybrid **QCBM + Claude** pipeline:
 4. SHA-1 + MinHash deduplication against 89,022 evaluated training hashes
 
 Zero contamination with any public training dataset.
+
+---
+
+## Comparison to existing benchmarks
+
+- **vs FinanceBench / FinQA / ConvFinQA** — those test financial knowledge; FinProof tests financial *safety / guardrails*. Complementary, not competing.
+- **vs JailbreakBench / AILuminate / HarmBench / StrongREJECT** — general-domain safety; FinProof is the BFSI-specialised counterpart with banking attack patterns and RBI/SEBI/IRDAI-aligned action criteria.
+- **vs general LLM benchmarks (HellaSwag, TruthfulQA, MT-Bench)** — those evaluate a general-purpose model; financial services is not a general-purpose environment.
+
+FinProof occupies the empty quadrant: **BFSI-domain + adversarial-safety + Indian-regulatory + agentic-aware.**
 
 ---
 
