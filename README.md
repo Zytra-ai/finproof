@@ -12,22 +12,34 @@ License: CC BY 4.0
 
 ---
 
+## What FinProof evaluates (and what it does NOT)
+
+FinProof is a **guardrail / safety** benchmark. It evaluates the control layer around a model, not the model's financial knowledge.
+
+| It measures | It does NOT measure |
+|---|---|
+| Does the guardrail correctly flag BFSI attacks vs legitimate queries? | Whether the model knows finance (FinanceBench / FinQA) |
+| Regulatory alignment (RBI / SEBI / IRDAI / DPDP) | General reasoning, math, chat quality |
+| Full stack: input / processing / output layers | Model capability in isolation |
+| FPR on a BFSI benign set (2,127 calibration queries) | — |
+
+---
+
 ## Leaderboard — May 2026
 
 ### Track 1 — Guardrail Classification (B-series)
 
 | Rank | Model | Organisation | BFSI F1 | Precision | Recall | FPR |
 |------|-------|-------------|---------|-----------|--------|-----|
-| 🥇 1 | **AVAL v1.4** | **Zytra Tech Solutions** | **0.968** | **0.940** | **0.998** | **—** |
+| 🥇 1 | **AVAL v1.4** | **Zytra Tech Solutions** | **0.968** | **0.940** | **0.998** | **—†** |
 | 2 | Granite Guardian 3.3 | IBM Research | 0.813 | 0.979 | 0.695 | 10.2% |
 | 3 | ShieldGemma 9B | Google | 0.731 | 0.993 | 0.578 | 2.9% |
 | 4 | LlamaGuard 3 | Meta AI | 0.569 | 1.000 | 0.397 | 0.0% |
 | 5 | WildGuard 7B | Allen AI | 0.346 | 0.999 | 0.209 | 0.1% |
 
-**AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998).** Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point recall. On a BFSI benign stream the precision gap is the operationally costly axis (false positives block real customers), so the trade-off is model-selection context dependent.
+> † AVAL v1.4 FPR from official eval server; see [finproof.ai](https://finproof.ai). Competitor FPR from independent benchmark run, same B-01–B-07 taxonomy, fp16, RTX 4090.
 
-> AVAL v1.4: macro F1 / Precision / Recall from full 4-tier evaluation (n=6,183 attack rows, IT4 run). FPR available at [finproof.ai](https://finproof.ai).  
-> Competitor metrics: independent benchmark run, same B-01..B-07 taxonomy, fp16, RTX 4090.
+**AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998).** Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point lower recall. On a BFSI benign stream the precision gap is the operationally costly axis (false positives block real customers); where maximal catch-rate matters more, AVAL's F1 and recall both lead.
 
 ### Track 2 — Agentic Safety (D-series, LLM-as-Agent)
 
@@ -40,16 +52,20 @@ License: CC BY 4.0
 
 ### Per-domain F1 — B-01 to B-07
 
-| Domain | AVAL v1.4 | Granite Guardian | ShieldGemma | LlamaGuard 3 | WildGuard 7B |
+| Domain | AVAL v1.4‡ | Granite Guardian | ShieldGemma | LlamaGuard 3 | WildGuard 7B |
 |--------|-----------|-----------------|-------------|--------------|-------------|
-| B-01 · Investment advice | **0.954** ★ | 0.936 | 0.792 | 0.885 | 0.053 |
-| B-02 · KYC / AML bypass | **0.981** ★ | 0.830 | 0.711 | 0.518 | 0.362 |
-| B-03 · Regulatory misrepresentation | **0.960** ★ | 0.706 | 0.917 | 0.718 | 0.207 |
-| B-04 · Regulatory hallucination | **0.957** ★ | 0.756 | 0.957 | 0.315 | 0.252 |
-| B-05 · Consent & data rights | **0.986** ★ | 0.746 | 0.534 | 0.496 | 0.448 |
-| B-06 · Transaction integrity | **0.975** ★ | 0.792 | 0.572 | 0.429 | 0.421 |
-| B-07 · Account authenticity bypass | **0.962** ★ | 0.895 | 0.481 | 0.465 | 0.556 |
-| **Weighted (n=6,183)** | **0.968** | 0.813 | 0.731 | 0.569 | 0.346 |
+| B-01 | **0.954** ★ | 0.936 | 0.792 | 0.885 | 0.053 |
+| B-02 | **0.981** ★ | 0.830 | 0.711 | 0.518 | 0.362 |
+| B-03 | **0.960** ★ | 0.706 | 0.917 | 0.718 | 0.207 |
+| B-04 | 0.957 | 0.756 | 0.957 | 0.315 | 0.252 |
+| B-05 | **0.986** ★ | 0.746 | 0.534 | 0.496 | 0.448 |
+| B-06 | **0.975** ★ | 0.792 | 0.572 | 0.429 | 0.421 |
+| B-07 | **0.962** ★ | 0.895 | 0.481 | 0.465 | 0.556 |
+| Weighted avg | **0.968** | — | — | — | — |
+
+> ‡ AVAL v1.4 per-category F1 from IT4 run (n=6,183 attack rows, all 4 tiers). Competitor aggregate F1 in Track 1 leaderboard above.  
+> Category codes map to taxonomy in the Domain Taxonomy section below. ★ = leading score for that domain.  
+> B-04: AVAL and ShieldGemma tied at 0.957 (no ★ awarded).
 
 ---
 
@@ -82,13 +98,10 @@ python finproof/eval/run_eval.py \
 ```bash
 pip install inspect-ai finproof-bench
 
-# Full public benchmark (B-series + D-series)
-inspect eval finproof_bench --model openai/gpt-4o
-
-# B-series only (guardrail classification)
+# B-series only (guardrail classification, public subset)
 inspect eval finproof_bench -T layer=input --model openai/gpt-4o
 
-# D-series requires T3 access — public subset has no D-categories
+# D-series requires T3 access — D-categories not in public HF subset
 # inspect eval finproof_bench -T layer=processing ...
 ```
 
@@ -104,28 +117,28 @@ No HuggingFace library required — all data available as plain JSONL for restri
 
 | Domain | Category | Regulatory Anchor |
 |--------|----------|------------------|
-| B-01 | Investment advice elicitation | SEBI IA Regulations 2013 §3 |
-| B-02 | KYC / AML bypass | RBI KYC Master Direction 2023 |
-| B-03 | Regulatory misrepresentation | SEBI FPI Regulations + RBI circulars |
-| B-04 | Regulatory document hallucination | EU AI Act Art.9(4) |
-| B-05 | Consent & data rights violations | DPDP Act 2023 |
-| B-06 | Transaction integrity violations | RBI NACH / NEFT frameworks |
-| B-07 | Account / document authenticity bypass | RBI Digital Banking Security circulars |
-| B-08 | Financial fraud / extortion | SEC Rule 10b-5 · RBI cybercrime |
-| B-09 | Unlicensed financial advice | SEC §202(a)(11) · MiFID II Art.24 |
-| B-10 | Regulatory compliance enquiries | EU AI Act Art.52 · SEBI CIR |
-| B-11 | AML / Sanctions evasion | FATF Rec.10-16 · EU 6AMLD |
-| B-12 | MNPI aggregation & market manipulation | SEBI Insider Trading Reg. 2015 |
-| B-13 | Cross-border regulatory arbitrage | FATF Rec.1 · BCBS Basel III |
-| B-14 | Indic-language BFSI attacks | RBI Consumer Protection Framework |
+| B-01 | Investment Advice Elicitation | SEBI IA Regulations 2013 §3 |
+| B-02 | KYC / AML Bypass | RBI KYC Master Direction 2023 |
+| B-03 | Regulatory Misrepresentation | SEBI FPI Regulations + RBI circulars |
+| B-04 | Regulatory Document Hallucination | EU AI Act Art.9(4) |
+| B-05 | Consent & Data Rights Violations | DPDP Act 2023 |
+| B-06 | Transaction Integrity Violations | RBI NACH / NEFT frameworks |
+| B-07 | Account / Document Authenticity Bypass | RBI Digital Banking Security circulars |
+| B-08 | Financial Fraud / Extortion | SEC Rule 10b-5 · RBI cybercrime |
+| B-09 | Unlicensed Financial Advice | SEC §202(a)(11) · MiFID II Art.24 |
+| B-10 | Regulatory Compliance Enquiries | EU AI Act Art.52 · SEBI CIR |
+| B-11 | AML / Sanctions Evasion | FATF Rec.10-16 · EU 6AMLD |
+| B-12 | MNPI Aggregation & Market Manipulation | SEBI Insider Trading Reg. 2015 |
+| B-13 | Cross-border Regulatory Arbitrage | FATF Rec.1 · BCBS Basel III |
+| B-14 | Indic-language BFSI Attacks | RBI Consumer Protection Framework |
 
 ### D-series — Agentic Safety (3 categories · 15 attack subtypes)
 
 | Domain | Category | Regulatory Anchor |
 |--------|----------|------------------|
-| D-09 | MCP tool-call poisoning | OWASP LLM Top 10 · EU AI Act Art.9 |
-| D-10 | Multi-agent orchestration bypass | NIST AI RMF · EU AI Act Art.13 |
-| D-11 | Goal-binding & alignment failures | EU AI Act Art.9(4) · IEEE 7010 |
+| D-09 | MCP Tool-call Poisoning | OWASP LLM Top 10 · EU AI Act Art.9 |
+| D-10 | Multi-agent Orchestration Bypass | NIST AI RMF · EU AI Act Art.13 |
+| D-11 | Goal-binding & Alignment Failures | EU AI Act Art.9(4) · IEEE 7010 |
 
 Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
 
@@ -207,6 +220,12 @@ Evaluation is free for all submissions.
   note    = {FINPROOF™ Trademark Pending · DIPP199187}
 }
 ```
+
+---
+
+## Independence
+
+FinProof Bench is an independently developed and openly published standard. Per the author's published statement, there is no commercial affiliation between the benchmark's author and any model appearing in the leaderboard. Institutions using it in a formal model-admission context should still check for train/eval contamination for any system that may have been exposed to FinProof data.
 
 ---
 
