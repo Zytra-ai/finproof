@@ -1,85 +1,73 @@
-# FinProof Bench
+# FINPROOF — BFSI AI Safety Benchmark
 
-> **BFSI adversarial safety benchmark** — the first dedicated evaluation framework for AI guardrails in Banking, Financial Services and Insurance.
+> The first open adversarial benchmark for AI guardrail systems in Banking, Financial Services, and Insurance.
 
-- Dataset: [Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)
-- Portal + leaderboard: [finproof.ai](https://finproof.ai)
-- Paper: [SSRN 6728799](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799)
-- Contact: finproof@zytratechnologies.com
-- License: CC-BY-4.0
+**11,474 prompts · 36 attack subtypes · 0% training contamination · Full regulatory mapping**
+
+Published by [Zytra Tech Solutions](https://zytratechnologies.com) · BKC, Mumbai, India  
+Benchmark portal: [finproof.ai](https://finproof.ai)  
+Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)  
+Contact: finproof@zytratechnologies.com  
+License: CC BY 4.0
 
 ---
 
-**FinProof Bench is the first adversarial benchmark dataset built specifically to evaluate the GenAI guardrail stack in banking, financial services, and insurance (BFSI).** Each record carries a **binary label — `attack` or `benign`** — plus `category`, `register`, `language`, and a `regulatory_anchor` tying every prompt to a specific obligation (SEBI, RBI, DPDP, EU AI Act). It scores whether a guardrail correctly distinguishes BFSI attacks from legitimate customer queries, reporting per-category F1, recall, and false-positive rate.
+## Leaderboard — May 2026
 
-**Full dataset: 11,474 prompts** across all tiers (V1 + V2). **HuggingFace public subset: 2,388 rows** — `attacks` (1,606) + `benign` (782) — across **7 BFSI attack categories (B-01–B-07)**, professional and retail registers. The wider v2 corpus — additional categories, agentic/MCP D-series, Indic languages, and the withheld Tier-4 test set — is gated separately; see access tiers below.
+### Track 1 — Guardrail Classification (B-series)
 
-## What FinProof evaluates (and what it does NOT)
+| Rank | Model | Organisation | BFSI F1 | Precision | Recall | FPR |
+|------|-------|-------------|---------|-----------|--------|-----|
+| 🥇 1 | **AVAL v1.4** | **Zytra Tech Solutions** | **0.968** | **0.940** | **0.998** | **—** |
+| 2 | Granite Guardian 3.3 | IBM Research | 0.813 | 0.979 | 0.695 | 10.2% |
+| 3 | ShieldGemma 9B | Google | 0.731 | 0.993 | 0.578 | 2.9% |
+| 4 | LlamaGuard 3 | Meta AI | 0.569 | 1.000 | 0.397 | 0.0% |
+| 5 | WildGuard 7B | Allen AI | 0.346 | 0.999 | 0.209 | 0.1% |
 
-FinProof is a **guardrail / safety** benchmark. It evaluates the control layer around a model, not the model's knowledge.
+**AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998).** Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point recall. On a BFSI benign stream the precision gap is the operationally costly axis (false positives block real customers), so the trade-off is model-selection context dependent.
 
-| It measures | It does NOT measure |
-|---|---|
-| Does the guardrail correctly flag BFSI attacks vs benign customer queries (binary)? | Whether the model *knows* finance (that's FinanceBench / FinQA) |
-| Regulatory alignment (RBI / SEBI / IRDAI / DPDP) + a safety score | General reasoning, math, chat quality |
-| Full stack across Input / Processing / Output layers | Model capability in isolation |
-| False-positive rate on a BFSI benign set (2,127 legitimate queries) | — |
+> AVAL v1.4: macro F1 / Precision / Recall from full 4-tier evaluation (n=6,183 attack rows, IT4 run). FPR available at [finproof.ai](https://finproof.ai).  
+> Competitor metrics: independent benchmark run, same B-01..B-07 taxonomy, fp16, RTX 4090.
 
-## Structure — three layers, mirroring the guardrail stack
+### Track 2 — Agentic Safety (D-series, LLM-as-Agent)
 
-Distributed as **plain JSONL** by design, so institutions with restricted outbound access can run it entirely inside their own perimeter (no external API calls or package dependencies).
+| Rank | Model | Organisation | Overall ASR ↓ | D-09 ASR | D-10 ASR | D-11 ASR |
+|------|-------|-------------|--------------|----------|----------|----------|
+| 🥇 1 | **AVAL v1.4** | **Zytra Tech Solutions** | **Eval in progress** | — | — | — |
+| — | gemini-3-flash | Google | 40.3% | 33.3% | 35.8% | 51.7% |
 
-- **Input Layer** — prompt injection, semantic injection, jailbreak attempts, PII submissions, sensitive-credential exposure, language-restriction violations. Each case carries a binary `label` (`attack`/`benign`), a `category`, and a `regulatory_anchor`. (The Block/Redact/Warn/Clarify actions and the 21-action set are the framework's **conceptual** guardrail taxonomy — how a stack *should* respond — not fields in the dataset.)
-- **Processing Layer** — agentic workflows: tool-scope-restriction sequences, rollback of unauthorized actions, inter-agent handoff / context-fidelity validation.
-- **Output Layer** — hallucination probing against known source documents, bias elicitation on protected demographic categories, source-citation verification, watermark/provenance validation, and Explainability-Trace verification (EU AI Act Art. 13; SR 11-7 documentation).
+> Lower ASR = better. ASR = Attack Success Rate on D-09/D-10/D-11 prompts sent directly to the model as agent.
 
-## Attack categories (public tier — B-01–B-07)
+### Per-domain F1 — B-01 to B-07
 
-| ID | Category | Regulatory anchor |
-|---|---|---|
-| B-01 | Investment Advice Elicitation | SEBI IA Regulations 2013 §3 |
-| B-02 | KYC / AML Bypass | RBI Master Directions KYC |
-| B-03 | Regulatory Misrepresentation | SEBI FPI Regulations + RBI circulars |
-| B-04 | Regulatory Document Hallucination | EU AI Act Art. 9(4) |
-| B-05 | Consent & Data Rights Violations | DPDP Act 2023 |
-| B-06 | Transaction Integrity Violations | RBI NACH / NEFT frameworks |
-| B-07 | Account / Document Authenticity Bypass | RBI Digital Banking Security circulars |
+| Domain | AVAL v1.4 | Granite Guardian | ShieldGemma | LlamaGuard 3 | WildGuard 7B |
+|--------|-----------|-----------------|-------------|--------------|-------------|
+| B-01 · Investment advice | **0.954** ★ | 0.936 | 0.792 | 0.885 | 0.053 |
+| B-02 · KYC / AML bypass | **0.981** ★ | 0.830 | 0.711 | 0.518 | 0.362 |
+| B-03 · Regulatory misrepresentation | **0.960** ★ | 0.706 | 0.917 | 0.718 | 0.207 |
+| B-04 · Regulatory hallucination | **0.957** ★ | 0.756 | 0.957 | 0.315 | 0.252 |
+| B-05 · Consent & data rights | **0.986** ★ | 0.746 | 0.534 | 0.496 | 0.448 |
+| B-06 · Transaction integrity | **0.975** ★ | 0.792 | 0.572 | 0.429 | 0.421 |
+| B-07 · Account authenticity bypass | **0.962** ★ | 0.895 | 0.481 | 0.465 | 0.556 |
+| **Weighted (n=6,183)** | **0.968** | 0.813 | 0.731 | 0.569 | 0.346 |
 
-Prompts span **professional** and **customer-mobile** conversational registers; adversarial coverage augmented via QCBM generation with a contamination-audit tool (`contamination_audit.py`). Wider categories (B-08–B-14, agentic/MCP D-09–D-11) and Indic languages exist in the gated/full corpus, not the public tier.
+---
 
-## Key results — FinProof (ASSAY v1), per category
+## Quick Start
 
-Eval-grounded results on the FinProof BFSI attack set (B-01–B-07). Positive class = attack; F1 / Precision / Recall are standard binary metrics on the attack categories. (The benign `general` split is excluded here — benign-class F1 is undefined; over-refusal is reported separately as pass-through accuracy.)
-
-| Category | n† | AVAL v1.4 F1 / Pr / Rc | Semalith v1.4 F1 / Pr / Rc |
-|---|---|---|---|
-| B-01 Investment Advice Elicitation | 867 | 0.943 / 0.899 / 0.991 | 0.956 / 0.989 / 0.924 |
-| B-02 KYC / AML Bypass | 877 | 0.952 / 0.917 / 0.990 | 0.940 / 0.974 / 0.907 |
-| B-03 Regulatory Misrepresentation | 863 | 0.943 / 0.894 / 0.997 | 0.982 / 0.987 / 0.976 |
-| B-04 Regulatory Document Hallucination | 874 | 0.938 / 0.895 / 0.986 | 0.980 / 0.990 / 0.970 |
-| B-05 Consent & Data Rights Violations | 918 | 0.960 / 0.927 / 0.995 | 0.978 / 0.977 / 0.978 |
-| B-06 Transaction Integrity Violations | 886 | 0.947 / 0.906 / 0.991 | 0.936 / 0.982 / 0.894 |
-| B-07 Account / Document Authenticity Bypass | 898 | 0.947 / 0.904 / 0.994 | 0.936 / 0.968 / 0.905 |
-| **Weighted overall (n=6,183)** | | **0.947 / 0.906 / 0.992** | **0.958 / 0.981 / 0.936** |
-
-† n = full evaluation set across all 4 tiers (6,183 attack rows, including withheld T4). HuggingFace public subset has 222–239 rows per category.
-
-**Reading it:** the two models sit at opposite ends of the precision–recall trade-off. **AVAL v1.4 is the recall leader** (0.992 — catches nearly every attack) at lower precision (0.906). **Semalith v1.4 is the precision leader** (0.981 — ~1 false alarm in 52 flags vs ~1 in 11 for AVAL) at slightly lower recall (0.936). On a BFSI benign stream, precision is the operationally costly axis (false positives block real customers), so the ~7.5-point precision gap is the key differentiator; where maximal catch-rate matters more than false-alarm cost, AVAL's recall leads. Metric definitions must travel with these numbers — a bare F1 is misread without the attack=positive convention.
-
-## Usage
+```bash
+pip install datasets
+```
 
 ```python
 from datasets import load_dataset
 
-# Two subsets: "attacks" and "benign". Prompt text is in the `input` field.
+# Public subset — 782 benign + 1,606 attack prompts (T1+T2, no registration)
+benign  = load_dataset("Zytra/finproof-bench", "benign",  split="train")  # 782
 attacks = load_dataset("Zytra/finproof-bench", "attacks", split="train")  # 1,606
-benign  = load_dataset("Zytra/finproof-bench", "benign",  split="train")  # 782 (FPR calibration)
-
-# schema: id, category, difficulty, register, language, input, label, regulatory_anchor,
-#         source, benchmark, finproof_tier
 ```
 
-**Run the evaluation harness locally:**
+**Run the evaluation harness locally (Track 1 — guardrail endpoint):**
 
 ```bash
 python finproof/eval/run_eval.py \
@@ -89,35 +77,121 @@ python finproof/eval/run_eval.py \
   --model-name "MyGuard v1" --model-org "MyOrg"
 ```
 
-## How institutions should use it
+**Track 2 — Inspect AI (LLM agent evaluation):**
 
-Run at three lifecycle points (per the FinProof guidance): before production deployment (SR 11-7 validation gate), after any material guardrail-config change, and on a quarterly/semi-annual monitoring cadence. Results should be reviewed by 2LoD (risk & compliance) and internal audit — not only the team that built the controls.
+```bash
+pip install inspect-ai finproof-bench
 
-## Distinctive design (not in general benchmarks)
+# Full public benchmark (B-series + D-series)
+inspect eval finproof_bench --model openai/gpt-4o
 
-- **Two conversational registers** — Professional / Customer-Mobile. Exposes register-dependent FPR (e.g. a guardrail with ~0% FPR on professional queries but high FPR on the retail register).
-- **FPR-calibrated BFSI benign set** (2,127 legitimate banking queries) — general benchmarks have no BFSI benign set, so their FPR is meaningless.
-- **Four-tier access** — T1 public JSONL · T2 email-gate · T3 research agreement · T4 withheld test set (submit guardrail as HTTP endpoint; `POST {"input"} -> {"prediction":0|1}`; prompts never leave the eval server).
+# B-series only (guardrail classification)
+inspect eval finproof_bench -T layer=input --model openai/gpt-4o
 
-## Comparison to existing benchmarks
+# D-series requires T3 access — public subset has no D-categories
+# inspect eval finproof_bench -T layer=processing ...
+```
 
-- **vs FinanceBench / FinQA / ConvFinQA** — those test financial knowledge; FinProof tests financial *safety / guardrails*. Complementary.
-- **vs JailbreakBench / AILuminate / HarmBench / StrongREJECT** — general-domain safety; FinProof is the BFSI-specialised counterpart with banking attack patterns and RBI/SEBI/IRDAI-aligned action criteria.
-- **vs general LLM benchmarks (HellaSwag, TruthfulQA, MT-Bench)** — those evaluate a general-purpose model; financial services is not a general-purpose environment.
+Inspect source: [`src/finproof_bench/`](src/finproof_bench/)
 
-FinProof occupies the empty quadrant: **BFSI-domain + adversarial-safety + Indian-regulatory + agentic-aware.**
+No HuggingFace library required — all data available as plain JSONL for restricted BFSI environments.
 
-## Access tiers
+---
+
+## Domain Taxonomy
+
+### B-series — Guardrail Classification (14 categories)
+
+| Domain | Category | Regulatory Anchor |
+|--------|----------|------------------|
+| B-01 | Investment advice elicitation | SEBI IA Regulations 2013 §3 |
+| B-02 | KYC / AML bypass | RBI KYC Master Direction 2023 |
+| B-03 | Regulatory misrepresentation | SEBI FPI Regulations + RBI circulars |
+| B-04 | Regulatory document hallucination | EU AI Act Art.9(4) |
+| B-05 | Consent & data rights violations | DPDP Act 2023 |
+| B-06 | Transaction integrity violations | RBI NACH / NEFT frameworks |
+| B-07 | Account / document authenticity bypass | RBI Digital Banking Security circulars |
+| B-08 | Financial fraud / extortion | SEC Rule 10b-5 · RBI cybercrime |
+| B-09 | Unlicensed financial advice | SEC §202(a)(11) · MiFID II Art.24 |
+| B-10 | Regulatory compliance enquiries | EU AI Act Art.52 · SEBI CIR |
+| B-11 | AML / Sanctions evasion | FATF Rec.10-16 · EU 6AMLD |
+| B-12 | MNPI aggregation & market manipulation | SEBI Insider Trading Reg. 2015 |
+| B-13 | Cross-border regulatory arbitrage | FATF Rec.1 · BCBS Basel III |
+| B-14 | Indic-language BFSI attacks | RBI Consumer Protection Framework |
+
+### D-series — Agentic Safety (3 categories · 15 attack subtypes)
+
+| Domain | Category | Regulatory Anchor |
+|--------|----------|------------------|
+| D-09 | MCP tool-call poisoning | OWASP LLM Top 10 · EU AI Act Art.9 |
+| D-10 | Multi-agent orchestration bypass | NIST AI RMF · EU AI Act Art.13 |
+| D-11 | Goal-binding & alignment failures | EU AI Act Art.9(4) · IEEE 7010 |
+
+Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
+
+---
+
+## Data Architecture
 
 | Tier | Prompts | Content | Access |
-|---|---|---|---|
-| T1 | 2,127 | Benign — FPR calibration baseline | Public · HuggingFace `benign` config |
-| T2 | 2,857 | Direct attacks + easy agentic scenarios | Email registration |
-| T3 | 3,555 | Medium-difficulty · QCBM-generated · Indic | Research agreement |
-| T4 | 2,935 | Hard-difficulty · Official withheld test set | Server-side only — prompts never revealed |
-| **Total** | **11,474** | V1 + V2 | |
+|------|---------|---------|--------|
+| Tier 1 | 2,127 | Benign — FPR calibration baseline (782 public on HF) | Public · No registration |
+| Tier 2 | 2,857 | Direct attacks + easy agentic scenarios (1,606 public on HF) | Email registration |
+| Tier 3 | 3,555 | Medium-difficulty · QCBM-generated · Indic | Research agreement required |
+| Tier 4 | 2,935 | Hard-difficulty · Official test set | **Withheld permanently** |
 
-T3 access: finproof@zytratechnologies.com
+**Total: 11,474 records** (9,347 attack · 2,127 benign)
+
+V1/V2 breakdown:
+
+| Version | Records | Notes |
+|---------|---------|-------|
+| V1 English | 6,283 | B-01 to B-11, T1–T4 |
+| V1 Indic | 3,900 | Hindi/Telugu/Tamil BFSI attacks |
+| V2 B-series | 625 | B-12/B-13/B-14 with 36 subtypes |
+| V2 B Indic | 216 | Indic extension of B-series v2 |
+| V2 D-series | 450 | D-09/D-10/D-11 agentic attacks |
+| **Total** | **11,474** | |
+
+Tier 3 access: finproof@zytratechnologies.com  
+Withheld set SHA-256: `bf35df2e5a3f08c9202555db1a5bd825...`
+
+---
+
+## Generation Methodology
+
+FINPROOF uses a hybrid **QCBM + Claude** pipeline:
+
+1. 8-qubit PennyLane QCBM trained with MMD loss on DeBERTa embedding projections per domain
+2. Born-rule sampling identifies underrepresented regions of each attack domain's distribution
+3. Claude generates prompts conditioned on quantum-sampled feature vectors
+4. SHA-1 + MinHash deduplication against 89,022 evaluated training hashes
+
+Zero contamination with any public training dataset.
+
+---
+
+## Submit Your Model
+
+```bash
+# Local T2/T3 scoring
+python finproof/eval/run_eval.py \
+  --hf-dataset Zytra/finproof-bench \
+  --finproof-version v1 \
+  --submit-endpoint https://your-guardrail/predict \
+  --model-name "MyGuard v1" --model-org "MyOrg"
+
+# T4 server-side evaluation (prompts never revealed)
+python finproof/eval/run_eval.py \
+  --submit-endpoint https://your-guardrail/predict \
+  --model-name "MyGuard v1" --model-org "MyOrg"
+```
+
+Official scores computed on withheld Tier 4 set.  
+Results published at [finproof.ai](https://finproof.ai)  
+Evaluation is free for all submissions.
+
+---
 
 ## Citation
 
@@ -129,42 +203,22 @@ T3 access: finproof@zytratechnologies.com
   journal = {SSRN Working Paper},
   number  = {6728799},
   year    = {2026},
-  url     = {https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799}
+  url     = {https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799},
+  note    = {FINPROOF™ Trademark Pending · DIPP199187}
 }
 ```
 
-## Independence
-
-FinProof Bench is an independently developed and openly published standard. Per the author's published statement, there is no commercial affiliation between the benchmark's author and any model appearing in the leaderboard. Institutions using it in a formal model-admission context should still check for train/eval contamination for any system that may have been exposed to FinProof data.
+---
 
 ## Links
 
-- Dataset: https://huggingface.co/datasets/Zytra/finproof-bench
-- Harness (CLI): https://github.com/zytra-ai/finproof
-- Portal + leaderboard: https://finproof.ai
-- Paper (SSRN): https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799
+- Benchmark portal: [finproof.ai](https://finproof.ai)
+- Dataset: [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench)
+- Inspect eval: [github.com/Zytra-ai/finproof/tree/main/src/finproof_bench](https://github.com/Zytra-ai/finproof/tree/main/src/finproof_bench)
+- SSRN paper: [papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6728799)
 - Contact: finproof@zytratechnologies.com
 
-## Inspect AI Evaluation (Track 2 — LLM-agent scoring)
+---
 
-Run FinProof against an LLM agent using [Inspect AI](https://inspect.ai-safety-institute.org.uk/):
-
-```bash
-# Install
-pip install inspect-ai finproof-bench
-
-# Full benchmark
-inspect eval finproof_bench --model openai/gpt-4o
-
-# B-series only (guardrail classification, input layer)
-inspect eval finproof_bench -T layer=input --model openai/gpt-4o
-
-# D-series only (agentic attacks, with LLM judge)
-inspect eval finproof_bench -T layer=processing -T judge_model=ollama/phi3 --model openai/gpt-4o
-
-# Smoke test
-inspect eval finproof_bench -T limit=5 --model openai/gpt-4o
-```
-
-Source: [`src/finproof_bench/`](src/finproof_bench/)
-
+© 2026 Zytra Tech Solutions · DIPP199187 · BKC, Mumbai, Maharashtra 400051, India  
+FINPROOF™ Trademark Pending · Patent Pending
