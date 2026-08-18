@@ -75,7 +75,7 @@ T4 prompts (2,935 records) are withheld permanently. Official T4 scores are comp
 ## Citation
 
 ```bibtex
-@article{addagada2026finproof,
+@article{zytra2026finproof,
   title   = {FINPROOF: The First Adversarial Benchmark for AI Guardrail
              Systems in Banking, Financial Services, and Insurance},
   author  = {Zytra Techsolutions},
