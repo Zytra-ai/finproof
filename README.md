@@ -80,9 +80,10 @@ pip install datasets
 ```python
 from datasets import load_dataset
 
-# Public subset — 782 benign + 1,606 attack prompts (T1+T2, no registration)
-benign  = load_dataset("Zytra/finproof-bench", "benign",  split="train")  # 782
-attacks = load_dataset("Zytra/finproof-bench", "attacks", split="train")  # 1,606
+# Public T1 subset — 1,184 rows (benign EN + Hindi T1 attacks)
+ds = load_dataset("Zytra/finproof-bench")                      # default: benign + attacks_hi
+tier1 = load_dataset("Zytra/finproof-bench", "tier1")          # all T1 splits (1,184 rows)
+# English attack prompts (T2+) require email registration — see access tiers below.
 ```
 
 **Run the evaluation harness locally (Track 1 — guardrail endpoint):**
@@ -158,8 +159,8 @@ Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
 
 | Tier | Prompts | Content | Access |
 |------|---------|---------|--------|
-| Tier 1 | 2,127 | Benign — FPR calibration baseline (782 public on HF) | Public · No registration |
-| Tier 2 | 2,857 | Direct attacks + easy agentic scenarios (1,606 public on HF) | Email registration |
+| Tier 1 | 1,184 | Benign EN + Hindi attacks — FPR calibration baseline | Public · HuggingFace `default` / `tier1` |
+| Tier 2 | 2,857 | Direct attacks + easy agentic scenarios | Email registration |
 | Tier 3 | 3,555 | Medium-difficulty · QCBM-generated · Indic | Research agreement required |
 | Tier 4 | 2,935 | Hard-difficulty · Official test set | **Withheld permanently** |
 

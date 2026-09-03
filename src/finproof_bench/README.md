@@ -2,7 +2,7 @@
 
 **BFSI adversarial safety benchmark** — evaluates AI guardrails and LLM agents against 36 attack subtypes in Banking, Financial Services and Insurance.
 
-- 2,388 public samples: 1,606 attacks + 782 benign (Tiers 1–3)
+- 1,184 public samples (T1): 1,072 benign EN + 112 Hindi attacks — English attack prompts (T2+) require email registration
 - B-series (B-01..B-14): direct-injection classification attacks
 - D-series (D-09..D-11): agentic/orchestration attacks
 - Primary metrics: macro F1 · FPR · per-category F1
