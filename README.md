@@ -39,7 +39,7 @@ FinProof is a **guardrail / safety** benchmark. It evaluates the control layer a
 
 > † AVAL v1.4 FPR from official eval server; see [finproof.ai](https://finproof.ai). Competitor FPR from independent benchmark run, same B-01–B-07 taxonomy, fp16, RTX 4090.
 
-AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998). Semalith v1.4 is the precision-optimised variant at 0.958 / 0.981 / 0.936 — a 4.1-point precision advantage over AVAL at the cost of 6.2-point lower recall.
+AVAL v1.4 leads on both F1 (0.968 vs next-best 0.813) and recall (0.998).
 
 AVAL v1.5 results (F1 0.977) are available at [finproof.ai](https://finproof.ai). These figures reflect the v1.4 release (IT4 evaluation run) for reproducibility against the published Excel data.
 
@@ -80,9 +80,9 @@ pip install datasets
 ```python
 from datasets import load_dataset
 
-# Public T1 subset — 1,184 rows (benign EN + Hindi T1 attacks)
-ds = load_dataset("Zytra/finproof-bench")                      # default: benign + attacks_hi
-tier1 = load_dataset("Zytra/finproof-bench", "tier1")          # all T1 splits (1,184 rows)
+# Public T1 subset — 1,228 rows (benign EN + Hindi T1 attacks + IICL seeds)
+ds = load_dataset("Zytra/finproof-bench")                      # default: benign EN
+iicl = load_dataset("Zytra/finproof-bench", "iicl_seeds")      # 44 IICL seed attack prompts (T1)
 # English attack prompts (T2+) require email registration — see access tiers below.
 ```
 
@@ -159,12 +159,14 @@ Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
 
 | Tier | Prompts | Content | Access |
 |------|---------|---------|--------|
-| Tier 1 | 1,184 | Benign EN + Hindi attacks — FPR calibration baseline | Public · HuggingFace `default` / `tier1` |
-| Tier 2 | 2,857 | Direct attacks + easy agentic scenarios | Email registration |
-| Tier 3 | 3,555 | Medium-difficulty · QCBM-generated · Indic | Research agreement required |
+| Tier 1 | 1,228 | Benign EN + Hindi attacks + IICL seed attacks — FPR calibration baseline | Public · HuggingFace `default` / `tier1` / `iicl_seeds` |
+| Tier 2 | 2,857 | Direct attacks + easy agentic scenarios | HuggingFace access request (gated) |
+| Tier 3 | 3,555 | Medium-difficulty · Quantum-generated · Indic | Research agreement — finproof@zytratechnologies.com |
 | Tier 4 | 2,935 | Hard-difficulty · Official test set | **Withheld permanently** |
 
 **Total: 11,474 records** (9,347 attack · 2,127 benign)
+
+T2 access: click **"Access repository"** on [huggingface.co/datasets/Zytra/finproof-bench](https://huggingface.co/datasets/Zytra/finproof-bench) — approved within 24 hours.
 
 V1/V2 breakdown:
 
@@ -183,11 +185,11 @@ Tier 3 access: finproof@zytratechnologies.com
 
 ## Generation Methodology
 
-FINPROOF uses a hybrid **QCBM + Claude** pipeline:
+FINPROOF uses a hybrid **Quantum + LLM** pipeline:
 
-1. 8-qubit PennyLane QCBM trained with MMD loss on DeBERTa embedding projections per domain
-2. Born-rule sampling identifies underrepresented regions of each attack domain's distribution
-3. Claude generates prompts conditioned on quantum-sampled feature vectors
+1. Quantum generative model trained on semantic embedding projections per domain
+2. Quantum sampling identifies underrepresented regions of each attack domain's distribution
+3. LLM generates prompts conditioned on quantum-sampled feature vectors
 4. SHA-1 + MinHash deduplication against 89,022 evaluated training hashes
 
 Zero contamination with any public training dataset.
