@@ -162,7 +162,7 @@ Full taxonomy: [finproof/tiers/TAXONOMY.md](./finproof/tiers/TAXONOMY.md)
 | Tier 1 | 1,228 | Benign EN + Hindi attacks + IICL seed attacks — FPR calibration baseline | Public · HuggingFace `default` / `tier1` / `iicl_seeds` |
 | Tier 2 | 2,857 | Direct attacks + easy agentic scenarios | HuggingFace access request (gated) |
 | Tier 3 | 3,555 | Medium-difficulty · Quantum-generated · Indic | Research agreement — finproof@zytratechnologies.com |
-| Tier 4 | 2,935 | Hard-difficulty · Official test set | **Withheld permanently** |
+| Tier 4 | 2,608 | Hard-difficulty · Official test set | **Withheld permanently** |
 
 **Total: 11,474 records** (9,347 attack · 2,127 benign)
 
